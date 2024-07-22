@@ -1,0 +1,48 @@
+services:
+  db:
+    image: mysql:9.0
+    container_name: mysql_db
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: ridvig
+      MYSQL_USER: Shubham
+      MYSQL_PASSWORD: Shubham_0410
+      MYSQL_ROOT_PASSWORD: Shubham_0410
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysql", "-h", "localhost", "-u", "root", "-pShubham_0410", "-e", "SELECT 1"]
+      timeout: 20s
+      retries: 20
+
+  backend:
+    build:
+      context: ./backend
+    container_name: django_backend
+    command: >
+      sh -c '
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: nextjs_frontend
+    command: npm run dev
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "3000:3000"
+
+volumes:
+  mysql_data:

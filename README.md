@@ -1,6 +1,11 @@
-# blendnet.AI_Internship_task
+# Ridvig_Internship_task
 
-# Setup 
+# Using Docker
+1. Run Command
+    docker-compose up --build
+
+
+# Manual Setup 
 1. Clone repository using- https://github.com/sjadhav2002/Ridvig_internship_task.git
 
 # Setup Backend
